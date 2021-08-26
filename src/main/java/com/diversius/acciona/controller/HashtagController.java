@@ -1,7 +1,9 @@
 package com.diversius.acciona.controller;
 
-import com.diversius.acciona.dto.HashtagDTO;
-import com.diversius.acciona.service.HashtagService;
+import com.diversius.acciona.controller.response.hashtag.HashtagResponse;
+import com.diversius.acciona.controller.response.hashtag.HashtagResponseBuilder;
+import com.diversius.acciona.useCase.hashtag.getMostUsedHashtags.GetMostUsedHashtagsOutput;
+import com.diversius.acciona.useCase.hashtag.getMostUsedHashtags.GetMostUsedHashtagsUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +14,12 @@ import java.util.List;
 public class HashtagController {
 
     @Autowired
-    private HashtagService hashtagService;
+    private GetMostUsedHashtagsUseCase getMostUsedHashtagsUseCase;
 
     @GetMapping("/ranking")
-    public List<HashtagDTO> getMostUsedHashtags() {
-        return hashtagService.getRanking();
+    public List<HashtagResponse> getMostUsedHashtags() {
+        GetMostUsedHashtagsOutput output = getMostUsedHashtagsUseCase.execute();
+        return HashtagResponseBuilder.getHashtagResponses(output.getHashtags());
     }
 
 }
